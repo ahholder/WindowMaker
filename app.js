@@ -16,6 +16,9 @@ let animationsList = [];
 let moverList = [];
 
 let eventQueue = [];
+let repeatQueue = [];
+
+let gameActive = true;
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 //Startup Functions
@@ -37,6 +40,11 @@ window.onload = function () {
 
     newGame();
     testConcept();
+}
+
+//(De)activate User Input
+function activate(state) {
+    gameActive = state;
 }
 
 //Starts a New Program
@@ -82,7 +90,7 @@ function testConcept() {
 
     //Test Win #4
     winPendingId = "testD";
-    winTerms = ["pos", "br", "z", "w", "h", "user", "bg", "txt", "l", "t"];
+    winTerms = ["pos", "br", "z", "w", "h", "user", "bg", "txt", "marl", "mart"];
     winValues = ["absolute", "none", 5, getRatio(30, true), getRatio(30, false), "none", "none", "center", 15, 300];
     winStyling = cssMake(winValues, winTerms);
     let moveWin = logWin(overlay, winPendingId, "div", winStyling, ["none", "none"], false, false, false, true);
@@ -91,16 +99,25 @@ function testConcept() {
 
     //Test Win #5
     winPendingId = "testE";
-    winTerms = ["pos", "br", "z", "w", "h", "user", "bg", "txt", "l", "t"];
+    winTerms = ["pos", "br", "z", "w", "h", "user", "bg", "txt", "marl", "mart"];
     winValues = ["absolute", "none", 5, getRatio(30, true), getRatio(30, false), "none", "none", "center", 300, 15];
     winStyling = cssMake(winValues, winTerms);
     let moveWin2 = logWin(overlay, winPendingId, "div", winStyling, ["none", "none"], false, false, false, true);
     let moveArt2 = moveWin2.canvas.getContext("2d");
     addAnimationZone(moveArt2);
 
+    //Test Win #6
+    winPendingId = "testF";
+    winTerms = ["pos", "br", "z", "w", "h", "user", "bg", "txt", "marl", "mart", "background-color"];
+    winValues = ["absolute", "none", 5, getRatio(60, true), getRatio(60, false), "none", "none", "center", 250, 350, "none"];
+    winStyling = cssMake(winValues, winTerms);
+    let moveWin3 = logWin(overlay, winPendingId, "div", winStyling, ["none", "none"], false, false, false, true);
+    let moveArt3 = moveWin3.canvas.getContext("2d");
+    addAnimationZone(moveArt3);
+
     //Test Move #1
-    makeMover(moveWin.win, 100, 800, -200, 1, true);
-    makeMover(moveWin2.win, 300, -290, 150, 1, true);
+    makeMover(moveWin.win, 100, 800, -200, 1, false);
+    makeMover(moveWin2.win, 300, -290, 150, 1, false);
 
     //Test Animation #1
     let defAnim = [];
@@ -146,8 +163,66 @@ function testConcept() {
     anim5[4] = ["skyblue", "skyblue", "skyblue", "skyblue", "skyblue"];
     anim5 = makeDrawing(anim5);
 
-    makeAnimation([anim, anim2, anim3, anim4, anim5, anim4, anim3, anim2], -1, 0, 0, moveArt, 30, "testAnim", 60);
     makeAnimation([anim5, anim4, anim3, anim2, anim, anim2, anim3, anim4], 3, 0, 0, moveArt2, 30, "testAnim2", 30);
+    makeAnimation([anim, anim2, anim3, anim4, anim5, anim4, anim3, anim2], -1, 0, 0, moveArt, 30, "testAnim", 60);
+
+    //Test Animation #2
+    defAnim = [];
+    defAnim[0] = ["none", "none", "none", "none", "none", "none", "none"];
+    defAnim[1] = ["none", "none", "none", "none", "none", "none", "none"];
+    defAnim[2] = ["none", "none", "none", "none", "none", "none", "none"];
+    defAnim[3] = ["none", "none", "none", "none", "none", "none", "none"];
+    defAnim[4] = ["none", "none", "none", "none", "none", "none", "none"];
+    defAnim[5] = ["none", "none", "none", "none", "none", "none", "none"];
+    defAnim[6] = ["none", "none", "none", "none", "none", "none", "none"];
+    defAnim = makeDrawing(defAnim);
+    anim = [];
+    anim[0] = ["none", "none", "none", "black", "none", "none", "none"];
+    anim[1] = ["none", "none", "none", "navajowhite", "none", "none", "none"];
+    anim[2] = ["none", "purple", "purple", "purple", "purple", "purple", "none"];
+    anim[3] = ["none", "purple", "purple", "purple", "purple", "purple", "none"];
+    anim[4] = ["none", "navajowhite", "purple", "purple", "purple", "navajowhite", "none"];
+    anim[5] = ["none", "none", "purple", "none", "purple", "none", "none"];
+    anim[6] = ["none", "none", "brown", "none", "brown", "none", "none"];
+    anim = makeDrawing(anim);
+    anim2 = [];
+    anim2[0] = ["none", "none", "none", "black", "none", "none", "none"];
+    anim2[1] = ["none", "none", "none", "navajowhite", "none", "none", "none"];
+    anim2[2] = ["none", "purple", "purple", "purple", "purple", "purple", "navajowhite"];
+    anim2[3] = ["none", "purple", "purple", "purple", "purple", "none", "none"];
+    anim2[4] = ["none", "navajowhite", "purple", "purple", "purple", "none", "none"];
+    anim2[5] = ["none", "none", "purple", "none", "purple", "none", "none"];
+    anim2[6] = ["none", "none", "brown", "none", "brown", "none", "none"];
+    anim2 = makeDrawing(anim2);
+    anim3 = [];
+    anim3[0] = ["none", "none", "none", "black", "none", "none", "none"];
+    anim3[1] = ["none", "none", "none", "navajowhite", "none", "none", "none"];
+    anim3[2] = ["none", "purple", "purple", "navajowhite", "purple", "none", "none"];
+    anim3[3] = ["none", "purple", "purple", "purple", "purple", "none", "none"];
+    anim3[4] = ["none", "navajowhite", "purple", "purple", "purple", "none", "none"];
+    anim3[5] = ["none", "none", "purple", "none", "purple", "none", "none"];
+    anim3[6] = ["none", "none", "brown", "none", "brown", "none", "none"];
+    anim3 = makeDrawing(anim3);
+    anim4 = [];
+    anim4[0] = ["none", "none", "none", "black", "navajowhite", "none", "none"];
+    anim4[1] = ["none", "none", "none", "navajowhite", "purple", "none", "none"];
+    anim4[2] = ["none", "purple", "purple", "purple", "purple", "none", "none"];
+    anim4[3] = ["none", "purple", "purple", "purple", "purple", "none", "none"];
+    anim4[4] = ["none", "navajowhite", "purple", "purple", "purple", "none", "none"];
+    anim4[5] = ["none", "none", "purple", "none", "purple", "none", "none"];
+    anim4[6] = ["none", "none", "brown", "none", "brown", "none", "none"];
+    anim4 = makeDrawing(anim4);
+    anim5 = [];
+    anim5[0] = ["none", "none", "none", "black", "navajowhite", "none", "none"];
+    anim5[1] = ["none", "none", "none", "navajowhite", "purple", "none", "none"];
+    anim5[2] = ["none", "purple", "purple", "purple", "purple", "none", "none"];
+    anim5[3] = ["none", "purple", "purple", "purple", "purple", "none", "none"];
+    anim5[4] = ["none", "navajowhite", "purple", "purple", "purple", "none", "none"];
+    anim5[5] = ["none", "none", "purple", "none", "purple", "none", "none"];
+    anim5[6] = ["none", "none", "brown", "none", "brown", "none", "none"];
+    anim5 = makeDrawing(anim5);
+
+    //makeAnimation([anim, anim, anim2, anim3, anim3, anim3, anim3, anim4, anim4, anim2, anim, anim], -1, 0, 0, moveArt3, 20, "testAnim3", 5);
 
     //Event Queue Test #1
     queueEvent(1000, console.log, [1000 + " animation frames!"]);
@@ -157,7 +232,25 @@ function testConcept() {
     queueEvent(120, styleWin, [document.getElementById("testA"), "#303060", "background-color"]);
     queueEvent(600, styleWin, [document.getElementById("testA"), "#303030", "background-color"]);
     queueEvent(800, styleWin, [document.getElementById("testA"), "#606060", "background-color"]);
-    queueEvent(360, makeMover, [moveWin2.win, 300, 290, -150, 1, true]);
+    queueEvent(360, makeMover, [moveWin2.win, 300, 290, -150, 1, false]);
+    queueEvent(20, makeMover, [moveWin3.win, 30, 100, -20, 1, false]);
+    queueEvent(50, makeMover, [moveWin3.win, 20, 50, 20, 1, false]);
+    queueEvent(110, makeMover, [moveWin3.win, 30, -150, 0, 1, false]);
+    queueEvent(1, makeAnimation, [[anim, anim, anim3, anim3, anim4, anim4, anim2, anim2, anim2, anim3, anim3, anim3, anim3, anim3, anim3, anim, anim, anim], 1, 0, 0, moveArt3, 20, "testAnim3", 10]);
+    queueEvent(170, makeAnimation, [[anim, anim, anim3, anim3, anim], -1, 0, 0, moveArt3, 20, "testAnim3", 30]);
+    //queueEvent(360, makeMover, [moveWin2.win, 300, 290, -150, 1, false]);
+    queueEvent(1, activate, [false]);
+    queueEvent(600, activate, [true]);
+
+    //Repeat Queue Test #1
+    queueRepeat("testR", 60, console.log, ["Hello, World!"]);
+    queueEvent(301, removeRepeatQueue, ["testR"]);
+    queueEvent(301, console.log, ["Ending Repeat"]);
+    //queueEvent(5, console.log, [moveWin3.win.id]);
+    //queueEvent(300, console.log, [animatedZones]);
+    queueEvent(301, clearWin, [moveWin3.win.id, false]);
+    //queueEvent(302, console.log, [animatedZones]);
+    //queueEvent(325, console.log, [animatedZones]);
 
 }
 
@@ -167,6 +260,7 @@ function testConcept() {
 
 function update() {
     makeEvents();
+    makeRepeats();
     animationUpdate();
 
     //Final
@@ -182,11 +276,10 @@ function animationUpdate() {
             if (animatedZones[i] != undefined) {
                 animatedZones[i].clearRect(0, 0, boardWidth, boardHeight);
             } else {
-                console.log(animatedZones);
+                console.log("undefined");
                 animatedZones[i] = animatedZones[animatedZones.length - 1];
                 animatedZones.pop();
                 i -= 1;
-                console.log(animatedZones);
             }
         }
     }
@@ -370,6 +463,23 @@ function clearWin(win, killHelper) {
             support.parentNode.removeChild(support);
         }
     }*/
+
+    if (box.nodeName.toLowerCase() == "canvas" || log.canvas != false) {
+        let checked;
+        if (box.nodeName.toLowerCase() != "div") {
+            checked = box.getContext("2d");
+        } else {
+            checked = log.canvas.getContext("2d");
+        }
+
+        for (let i = 0; i < animatedZones.length; i++) {
+            if (animatedZones[i] == checked) {
+                animatedZones[i] = animatedZones[animatedZones.length - 1];
+                animatedZones.pop();
+                i -= 1;
+            }
+        }
+    }
 
     box.parentNode.removeChild(box);
 }
@@ -657,6 +767,7 @@ function getSpacing(area, buffer, object, count) {
 
 //Window Interactions for Hovering and Clicking
 function highlight() {
+    if (gameActive == false) return;
     let box = document.getElementById(this.id);
     let wind = checkWinLog(this.id, false);
 
@@ -671,6 +782,7 @@ function highlight() {
 }
 
 function unhighlight() {
+    if (gameActive == false) return;
     let box = document.getElementById(this.id);
     let wind = checkWinLog(this.id, false);
 
@@ -685,6 +797,7 @@ function unhighlight() {
 }
 
 function clicked() {
+    if (gameActive == false) return;
     let box = document.getElementById(this.id);
     let wind = checkWinLog(this.id, true);
 
@@ -721,7 +834,7 @@ function drawSprite(region, draws, artX, artY, localPixes) {
     for (let i = 0; i < height; i++) {
         for (let i2 = 0; i2 < width; i2++) {
             let i3 = (i2 * width) + i;
-            if (art[i3] != 0) {
+            if (art[i3] != 0 && art[i3] != "none") {
                 region.fillStyle = art[i3];
                 let x = artX + (i * localPixes);
                 let y = artY + (i2 * localPixes);
@@ -891,6 +1004,47 @@ function queueEvent(delay, action, params) {
 //Adds an Event to the Global Queue
 function addEventQueue(event) {
     eventQueue[eventQueue.length] = event;
+}
+
+//Applies Global Repeats
+function makeRepeats() {
+    if (repeatQueue.length > 0) {
+        for (let i = 0; i < repeatQueue.length; i++) {
+            if (globalAnimationCycle % repeatQueue[i].when == 0) {
+                repeatQueue[i].action.apply(this, repeatQueue[i].params);
+            }
+        }
+    }
+}
+
+//Queues a Repeat for a Future Frame
+function queueRepeat(id, when, action, params) {
+    //let result = { "when": when, "action": action, "params": params };
+    let result = { "id": id, "when": when, "action": action, "params": params };
+    addRepeatQueue(result);
+}
+
+//Adds a Repeat to the Global Queue
+function addRepeatQueue(repeat) {
+    repeatQueue[repeatQueue.length] = repeat;
+}
+
+//Removes a Repeat from the Global Queue
+function removeRepeatQueue(repeat) {
+    let id = "ignore";
+    for (let i = 0; i < repeatQueue.length; i++) {
+        if (repeatQueue[i].id == repeat) {
+            id = i;
+        }
+    }
+
+    if (id != "ignore") {
+        if (id != repeatQueue.length - 1) {
+            repeatQueue[id] = repeatQueue[repeatQueue.length - 1];
+        }
+        repeatQueue.pop();
+        //if (repeatQueue.length < 1) repeatQueue = [];
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
