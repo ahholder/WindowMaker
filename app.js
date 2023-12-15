@@ -39,7 +39,7 @@ window.onload = function () {
     addAnimationZone(context);
 
     newGame();
-    testConcept();
+    testBatch1();
 }
 
 //(De)activate User Input
@@ -54,8 +54,31 @@ function newGame() {
     requestAnimationFrame(update);
 }
 
+//Test Proofs of Concept
+function testBatch1() {
+
+    let winPendingId;
+    let winTerms;
+    let winValues;
+    let winStyling;
+    let winText;
+
+    //Test Win #1
+    winPendingId = "testA";
+    winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "fs", "bg", "txt", "marl", "mart"];
+    winValues = ["absolute", "5px solid rgba(0,150,255,0.7)", 3, 5, 350, 250, "none", 18, "slategray", "center", 0, 0];
+    winStyling = cssMake(winValues, winTerms);
+    winText = "\nThis window is centered on its parent object and canvased.\n\nThis window is not clickable or hoverable.";
+    logWin(overlay, winPendingId, "div", winStyling, ["#959595", "#909090"], false, false, true, true);
+    document.getElementById("testA").innerText = winText;
+    makeSupportWin("testA", "title", "Test Instance");
+    makeSupportWin("testA", "button", "Animate");
+    makeSupportWin("testA", "button", "Move");
+
+}
+
 //Test the Windows' Proof of Concept
-function testConcept() {
+function testBatch2() {
 
     let winPendingId;
     let winTerms;
@@ -254,6 +277,170 @@ function testConcept() {
 
 }
 
+//List of Test Animations
+function testAns(result) {
+    let set = [];
+    let c = ["none", "navajowhite","purple","brown","darkgoldenrod", "black", "white"]
+    let m = 0;
+
+    //set[m][set[m].length] = ["none", "none", "none", "none", "none", "none", "none", "none"];
+
+    set[m] = [];
+    set[m][set[m].length] = [c[0], c[0], c[4], c[4], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[1], c[1], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[2], c[2], c[2], c[2], c[0]];
+    set[m][set[m].length] = [c[0], c[1], c[2], c[2], c[1], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[3], c[3], c[0], c[0]];
+
+    m += 1;
+    set[m] = [];
+    set[m][set[m].length] = [c[0], c[0], c[4], c[4], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[1], c[1], c[0], c[0]];
+    set[m][set[m].length] = [c[1], c[2], c[2], c[2], c[2], c[1]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[3], c[3], c[0], c[0]];
+
+    m += 1;
+    set[m] = [];
+    set[m][set[m].length] = [c[0], c[0], c[4], c[4], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[1], c[1], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[2], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[1], c[2], c[1], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[3], c[3], c[0], c[0]];
+
+    m += 1;
+    set[m] = [];
+    set[m][set[m].length] = [c[0], c[0], c[4], c[4], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[1], c[1], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[2], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[1], c[2], c[1], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[3], c[3], c[0], c[0]];
+
+    m += 1;
+    set[m] = [];
+    set[m][set[m].length] = [c[0], c[0], c[5], c[5], c[5], c[5], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[5], c[5], c[6], c[6], c[1], c[1], c[5], c[5], c[5], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[6], c[6], c[1], c[1], c[1], c[6], c[6], c[5]];
+    set[m][set[m].length] = [c[5], c[6], c[6], c[6], c[1], c[1], c[1], c[6], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[6], c[1], c[1], c[1], c[6], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[6], c[1], c[1], c[1], c[6], c[5], c[0]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[6], c[1], c[1], c[6], c[6], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[0], c[5], c[6], c[6], c[6], c[6], c[6], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[0], c[0], c[5], c[5], c[6], c[6], c[6], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[0], c[0], c[0], c[0], c[5], c[5], c[5], c[5], c[0]];
+
+    m += 1;
+    set[m] = [];
+    set[m][set[m].length] = [c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[5], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[5], c[0], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[5], c[5], c[5], c[6], c[6], c[5], c[5], c[5], c[6], c[6], c[6], c[6], c[5], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[6], c[5], c[5], c[6], c[6], c[6], c[5], c[5], c[6], c[5], c[5], c[6], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[5], c[6], c[6], c[5], c[6], c[6], c[6], c[6], c[6], c[5], c[5], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[6], c[5], c[5], c[6], c[6], c[6], c[5], c[5], c[5], c[6], c[5], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[6], c[5], c[6], c[6], c[6], c[5], c[0]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[5], c[6], c[5], c[6], c[5], c[6], c[5], c[6], c[6], c[6], c[5], c[0], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[6], c[6], c[6], c[5], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[5], c[5], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[6], c[6], c[6], c[6], c[6], c[5], c[5], c[5], c[0], c[0], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[5], c[5], c[5], c[5], c[5], c[5], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0]];
+
+    m += 1;
+    set[m] = [];
+    set[m][set[m].length] = [c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[5], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[5], c[5], c[5], c[5], c[6], c[6], c[5], c[5], c[5], c[6], c[6], c[6], c[5], c[0], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[6], c[5], c[5], c[6], c[6], c[6], c[5], c[5], c[6], c[6], c[6], c[6], c[5], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[6], c[5], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[5], c[5], c[6], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[6], c[6], c[6], c[5], c[6], c[6], c[6], c[6], c[6], c[5], c[5], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[5], c[6], c[6], c[5], c[5], c[6], c[6], c[6], c[5], c[5], c[5], c[6], c[5], c[6], c[5]];
+    set[m][set[m].length] = [c[0], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[6], c[5], c[6], c[6], c[6], c[5], c[0]];
+    set[m][set[m].length] = [c[0], c[5], c[5], c[6], c[5], c[6], c[5], c[6], c[5], c[5], c[6], c[6], c[6], c[5], c[0], c[0]];
+    set[m][set[m].length] = [c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[5], c[6], c[6], c[6], c[5], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[6], c[5], c[5], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[5], c[6], c[6], c[6], c[6], c[6], c[6], c[5], c[5], c[5], c[0], c[0], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[5], c[5], c[5], c[5], c[5], c[5], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0], c[0]];
+
+    for (let i = 0; i < set.length; i++) {
+        /*for (let i2 = 0; i2 < set[i].length; i2++) {
+            set[i2] = makeDrawing(set[i2]);
+        }*/
+        set[i] = makeDrawing(set[i]);
+    }
+
+    return set[result];
+}
+
+//Test Button Clicks
+function testButtonClick(clickedButtonId, id) {
+    if (clickedButtonId == 0) {
+
+        let winPendingId = "testB";
+        let parent = document.getElementById("testA");
+        let newSize = [getRatio(100, true), getRatio(100, false)];
+        let elevation = (propMin(parent.style["height"]) - (getRatio(100, false) + 10)) + "px";
+        let winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "bg", "txt", "l", "t"];
+        let winValues = ["absolute", "none", 3, 5, newSize[0], newSize[1], "none", "none", "center", 0, elevation];
+        let winStyling = cssMake(winValues, winTerms);
+        let anim = logWin(parent, winPendingId, "canvas", winStyling, ["none", "none"], false, false, false, false);
+        let aContext = anim.win.getContext("2d");
+
+        addAnimationZone(aContext);
+        let aSlate = [testAns(0), testAns(2), testAns(0), testAns(3)];
+        let aSlate2 = [testAns(0), testAns(1), testAns(0), testAns(1)];
+        let testAnim = makeAnimation(aSlate, 5, 0, 0, aContext, 15, "testB", 15);
+        centerAnim(anim.win, testAnim, parent, true, false, true);
+
+        queueEvent(300, makeAnimation, [aSlate2, 5, 0, 0, aContext, 15, "testB", 15]);
+        queueEvent(601, clearWin, [anim.win.id, false]);
+
+    } else {
+
+        let testMoving = "testA";
+        let testMovingLog = checkWinLog(testMoving, false);
+        queueEvent(1, makeMover, [document.getElementById(testMoving), 120, 150, -50, 1, false]);
+        queueEvent(121, makeMover, [document.getElementById(testMoving), 60, -200, 100, 1, false]);
+        queueEvent(181, makeMover, [document.getElementById(testMoving), 100, 50, -50, 1, false]);
+        queueEvent(2, makeMover, [document.getElementById(testMovingLog.buttons[0]), 100, -100, 75, 1, true]);
+        queueEvent(102, makeMover, [document.getElementById(testMovingLog.buttons[0]), 60, -300, -225, 1, true]);
+        queueEvent(162, makeMover, [document.getElementById(testMovingLog.buttons[0]), 30, 400, 150, 1, true]);
+        queueEvent(2, makeMover, [document.getElementById(testMovingLog.buttons[1]), 100, 10, 100, 1, true]);
+        queueEvent(92, makeMover, [document.getElementById(testMovingLog.buttons[1]), 200, -10, -100, 1, true]);
+
+        let winPendingId = "testC";
+        let parent = document.getElementById("testA");
+        let newSize = [getRatio(100, true), getRatio(100, false)];
+        let winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "bg", "txt", "l", "t"];
+        let winValues = ["absolute", "none", 3, 5, newSize[0], newSize[1], "none", "none", "center", 0, 0];
+        let winStyling = cssMake(winValues, winTerms);
+        let anim = logWin(parent, winPendingId, "canvas", winStyling, ["none", "none"], false, false, false, false);
+        let aContext = anim.win.getContext("2d");
+        addAnimationZone(aContext);
+
+        let aSlate = [testAns(5), testAns(6), testAns(5), testAns(6)];
+        let testAnim = makeAnimation(aSlate, -1, 0, 0, aContext, 10, "testC", 20);
+        centerAnim(anim.win, testAnim, parent, true, true, true);
+        makeMover(anim.win, 30, 0, 50, 1, true);
+        queueRepeat("testTroll", 60, makeMover, [anim.win, 30, 0, -100, 1, true]);
+        queueRepeat("testTroll2", 60, queueEvent, [30, makeMover, [anim.win, 30, 0, 100, 1, true]]);
+        queueEvent(361, removeAnimation, [testAnim]);
+        queueEvent(362, removeRepeatQueue, ["testTroll"]);
+        queueEvent(362, removeRepeatQueue, ["testTroll2"]);
+        queueEvent(363, clearWin, [anim.win.id, false]);
+
+    }
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 //Updates
 //------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -276,7 +463,7 @@ function animationUpdate() {
             if (animatedZones[i] != undefined) {
                 animatedZones[i].clearRect(0, 0, boardWidth, boardHeight);
             } else {
-                console.log("undefined");
+                console.log("undefined animation zone");
                 animatedZones[i] = animatedZones[animatedZones.length - 1];
                 animatedZones.pop();
                 i -= 1;
@@ -449,11 +636,11 @@ function clearWin(win, killHelper) {
     let log = checkWinLog(win, false);
     let support;
 
-    if (log.title != false) {
+    if (log.title != undefined && log.title != false) {
         support = document.getElementById(log.title);
         support.parentNode.removeChild(support);
     }
-    if (log.helper != false && killHelper == true) {
+    if (log.helper != undefined && log.helper != false && killHelper == true) {
         support = document.getElementById(log.helper);
         support.parentNode.removeChild(support);
     }
@@ -487,7 +674,6 @@ function clearWin(win, killHelper) {
 //Modifies an Existing Window's CSS Style
 function styleWin(win, styling, part) {
     win.style[part] = styling;
-    //console.log(win.id + ", " + styling + " @ " + part);
 }
 
 //Creates and Returns a New Window
@@ -583,9 +769,6 @@ function logWin(parent, id, type, styling, colors, hoverable, clickable, centere
 
     if (centered) {
         let area = [getParentInfo(parent,"w"), getParentInfo(parent,"h")];
-        //if (parent.width == undefined || parent.height == undefined) {
-        //    area = [parent.style.width, parent.style.height];
-        //}
         styleWin(newWin, centerWin(newWin.style.width, newWin.style.height, area[0], area[1])[0], "margin-left");
         styleWin(newWin, centerWin(newWin.style.width, newWin.style.height, area[0], area[1])[1], "margin-top");
     }
@@ -617,6 +800,8 @@ function checkWinLog(id, numOnly) {
             }
         }
     }
+
+    return false;
 }
 
 //Creates Companion Windows for a Primary Window
@@ -653,7 +838,7 @@ function makeSupportWin(id, type, text) {
         newH = 38;
         winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "fs", "bg", "txt", "marl", "mart", "opacity", "color", "padt"];
         winValues = ["absolute", "1px solid black", getParentInfo(parent, "brr"), 5, newW, newH, "none", 28, "black",
-            "center", getParentInfo(parent, "marl"), getParentInfo(parent, "mart"), 0.9, "white", 2];
+            "center", getParentInfo(parent, "marl"), getParentInfo(parent, "mart"), 0.95, "white", 2];
     } else {
         details = [true, true, true, false];
         if (winds[winNum].buttons == false) {
@@ -663,8 +848,8 @@ function makeSupportWin(id, type, text) {
         }
         newW = 100;
         newH = 28;
-        winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "fs", "bg", "txt", "marl", "mart", "opacity"];
-        winValues = ["absolute", "1px solid black", 1, 6, newW, newH, "none", 24, newColors[1],
+        winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "fs", "bg", "txt", "l", "t", "opacity"];
+        winValues = ["absolute", "1px solid #505050", 1, 6, newW, newH, "none", 24, newColors[1],
             "center", 0, 0, 0.9];
     }
 
@@ -691,6 +876,7 @@ function makeSupportWin(id, type, text) {
         styleWin(parent, "0px", cssAbb("brtr"));
         styleWin(supportWin, "0px", cssAbb("brbl"));
         styleWin(supportWin, "0px", cssAbb("brbr"));
+        styleWin(supportWin, parent.style["border"], "border");
         styleWin(parent, "none", cssAbb("border-top"));
         styleWin(supportWin, "none", cssAbb("border-bottom"));
     } else {
@@ -804,11 +990,6 @@ function clicked() {
     clickResults(this.id, box, wind);
 }
 
-//Applied Results for Clicking -- Program Specific
-function clickResults(id, box, wind) {
-    console.log("successfully clicked " + id + "!");
-}
-
 //Returns a Window Scaling Ratio for Uniform Boxes
 function getRatio(value, isX) {
     let ratio = boardWidth / boardHeight;
@@ -817,6 +998,97 @@ function getRatio(value, isX) {
         return result;
     } else {
         return value;
+    }
+}
+
+//Returns Centered Animation Coordinates
+function centerAnim(target, anim, parent, x, y, alt) {
+    let ar = getAnimRatio(anim, false);
+    let ps = [propMin(parent.style.width), propMin(parent.style.height)];
+    let result = centerWin(ar[0], ar[1], ps[0], ps[1]);
+    let part = "mar";
+    if (alt) part = "";
+    let suffix;
+
+    if (x) {
+        suffix = part + "l";
+        styleWin(target, result[0], cssAbb(suffix));
+    }
+    if (y) {
+        suffix = part + "t";
+        styleWin(target, result[1], cssAbb(suffix));
+    }
+
+    return result;
+}
+
+//Returns Orientation Based on Animation Scale
+function getAnimRatio(anim, px) {
+    let tilesX = anim.art[0].width - 1;
+    let tilesY = anim.art[0].height - 1;
+
+    let stillCheck = true;
+    for (let i = 0; i < anim.art[0].width; i++) {
+        if (checkBlank(i, anim.art[0], false) && stillCheck) {
+            tilesX -= 1;
+        } else {
+            stillCheck = false;
+        }
+    }
+    stillCheck = true;
+    for (let i = anim.art[0].width - 1; i >= 0; i -= 1) {
+        if (checkBlank(i, anim.art[0], false) && stillCheck) {
+            tilesX -= 1;
+        } else {
+            stillCheck = false;
+        }
+    }
+
+    stillCheck = true;
+    for (let i = 0; i < anim.art[0].height; i++) {
+        if (checkBlank(i, anim.art[0], true) && stillCheck) {
+            tilesY -= 1;
+        } else {
+            stillCheck = false;
+        }
+    }
+    stillCheck = true;
+    for (let i = anim.art[0].height - 1; i >= 0; i -= 1) {
+        if (checkBlank(i, anim.art[0], true) && stillCheck) {
+            tilesX -= 1;
+        } else {
+            stillCheck = false;
+        }
+    }
+
+    let x = tilesX * anim.localPixes;
+    let y = tilesY * anim.localPixes;
+    if (px) {
+        x = x.toString() + "px";
+        y = y.toString() + "px";
+    }
+    let results = [x, y];
+
+    return results;
+}
+
+//Applied Results for Clicking -- Program Specific
+function clickResults(id, box, wind) {
+    console.log("successfully clicked " + id + "!");
+
+    //Test Function -- Animation
+    if (id == "testA-button0" && document.getElementById("testB") == undefined) {
+        testButtonClick(0, id);
+
+    } else if (id == "testA-button0" && document.getElementById("testB") != undefined) {
+        console.log("Animation Test Already Underway!");
+    }
+
+    //Test Function -- Movement
+    if (id == "testA-button1" && checkMover("testA") == false && document.getElementById("testC") == undefined) {
+        testButtonClick(1, id);
+    } else if (id == "testA-button1" && (checkMover("testA") == true || document.getElementById("testC") != undefined)) {
+        console.log("Movement Test Already Underway!");
     }
 }
 
@@ -846,7 +1118,7 @@ function drawSprite(region, draws, artX, artY, localPixes) {
 
 //Returns an Ojbect to be Drawn
 function makeDrawing(drawn) {
-    let result = { "art": false, "width": drawn[0].length, "height": drawn.length };
+    let result = { "art": false, "width": drawn[0].length, "height": drawn.length, "original": drawn };
     result.art = drawnArray(drawn, result.width, result.height);
     return result;
 }
@@ -898,6 +1170,37 @@ function drawSpot(x, y, height) {
     return (x * height) + y;
 }
 
+//Returns if a Row or Column is Blank in a Drawing
+function checkBlank(id, drawn, isRow) {
+    let art = drawn.original;
+    let result = true;
+    let checks = art.length;
+    if (isRow) {
+        checks = art[id].length;
+    }
+
+    for (let i = 0; i < checks; i++) {
+        let checked = art[i][id];
+        if (isRow) checked = art[id][i];
+        if (checked != "none") result = false;
+    }
+
+    return result;
+}
+
+//Returns if an Element is Already Moving
+function checkMover(elem) {
+    let result = false;
+
+    for (let i = 0; i < moverList.length; i++) {
+        if (moverList[i].elem.id == elem) {
+            result = true;
+        }
+    }
+
+    return result;
+}
+
 //Makes an Element Mobile
 function makeMover(elem, frames, distX, distY, frequency, alt) {
     let mx = distX / frames;
@@ -928,6 +1231,28 @@ function moveMover(moved) {
         if (moved.current <= -1) moved.current = 0;
         styleWin(mover, newX, propX);
         styleWin(mover, newY, propY);
+
+        //Moves Titles for Windows with Them
+        let moveLog = checkWinLog(mover.id, false);
+        if (moveLog != false) {
+            if (moveLog.title != false) {
+                let moveTitle = document.getElementById(moveLog.title);
+                propX = cssAbb("marl");
+                propY = cssAbb("mart");
+                if (moved.alt == true) {
+                    propX = cssAbb("l");
+                    propY = cssAbb("t");
+                }
+                newX = propMin(moveTitle.style[propX]) + moved.distX;
+                newY = propMin(moveTitle.style[propY]) + moved.distY;
+                newX += addPX(newX, propX);
+                newY += addPX(newY, propY);
+                newX = newX.replace(";", "");
+                newY = newY.replace(";", "");
+                styleWin(moveTitle, newX, propX);
+                styleWin(moveTitle, newY, propY);
+            }
+        }
     }
 }
 
@@ -948,14 +1273,14 @@ function addMover(mover) {
 
 //Removes a Moved Element from the Global List
 function removeMover(mover) {
-    let id = false;
+    let id = "none";
     for (let i = 0; i < moverList.length; i++) {
         if (moverList[i] == mover) id = i;
     }
 
-    if (id != false) {
+    if (id != "none") {
         if (id != moverList.length - 1) {
-            moveList[id] = moveList[moverList.length - 1];
+            moverList[id] = moverList[moverList.length - 1];
         }
         moverList.pop();
     }
@@ -963,12 +1288,12 @@ function removeMover(mover) {
 
 //Removes an Animation from the Global List
 function removeAnimation(animation) {
-    let id = false;
+    let id = "none";
     for (let i = 0; i < animationsList.length; i++) {
         if (animationsList[i] == animation) id = i;
     }
 
-    if (id != false) {
+    if (id != "none") {
         if (id != animationsList.length - 1) {
             animationsList[id] = animationsList[animationsList.length - 1];
         }
