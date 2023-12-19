@@ -7,6 +7,7 @@ let board;
 let context;
 let boardWidth = 1200;
 let boardHeight = 700;
+let fps = 60;
 let winds = [];
 
 let pixes = 3;
@@ -406,11 +407,13 @@ function testButtonClick(clickedButtonId, id) {
         queueEvent(300, makeAnimation, [aSlate2, 5, 0, 0, aContext, 15, "testB", 15]);
         queueEvent(601, clearWin, [anim.win.id, false]);
 
-        for (let i = 0; i < 4; i++) {
-            console.log("Back Animation # " + i + ":");
+        let backAnimationAttempts = 75;
+        let successfulAnimations = 0;
+        let animationDuration = 1500;
+        for (let i = 0; i < backAnimationAttempts; i++) {
             let boardPoints = [rng(boardWidth * 0.1, boardWidth * 0.9), rng(boardHeight * 0.1, boardHeight * 0.9)];
             let backAnimation = [testAns(0), testAns(3), testAns(0), testAns(1), testAns(0), testAns(2)];
-            /*let avoided = propMin(winds[0].win.style[cssAbb("marl")]) - (backAnimation[0].width * 10);
+            let avoided = propMin(winds[0].win.style[cssAbb("marl")]) - (backAnimation[0].width * 10);
             let avoided2 = propMin(winds[0].win.style[cssAbb("marl")]) + propMin(winds[0].win.style[cssAbb("w")]);
             if (boardPoints[0] >= avoided && boardPoints[0] <= avoided2) {
                 if (trueFalse()) {
@@ -418,17 +421,22 @@ function testButtonClick(clickedButtonId, id) {
                 } else {
                     boardPoints[0] = avoided2 + 1;
                 }
-            }*/
+            }
             backAnimation = makeAnimation(backAnimation, -1, boardPoints[0], boardPoints[1], context, 10, "testBack" + i, 10);
             backAnimation = mirrorAnim(backAnimation, trueFalse());
-            let testBlock = animToBlock(backAnimation);
-            //console.log(i + " Being Tested: " + checkAnimationBlock(backAnimation, true, false));
-            checkAnimationBlock(backAnimation, true, true);
-            //console.log("Back Animation #" + i + " Found Blocked");
-            addBlockedArea(testBlock);
-            queueEvent(1500, removeAnimation, [backAnimation]);
-            queueEvent(1500, removeBlockedArea, [blockedAreas[blockedAreas.length - 1]]);
+            if (checkAnimationBlock(backAnimation, true)) {
+                removeAnimation(backAnimation);
+            } else {
+                let testBlock = animToBlock(backAnimation);
+                addBlockedArea(testBlock);
+                queueEvent(animationDuration, removeAnimation, [backAnimation]);
+                queueEvent(animationDuration, removeBlockedArea, [blockedAreas[blockedAreas.length - 1]]);
+                successfulAnimations += 1;
+            }
         }
+        console.log("*Creating " + successfulAnimations + " / " + backAnimationAttempts + " possible background animations to avoid overlap");
+        console.log("*Background animations last " + (animationDuration / fps) + " seconds and can be stacked between animation tests");
+
 
     } else {
 
@@ -467,6 +475,10 @@ function testButtonClick(clickedButtonId, id) {
     }
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+//Simple Functions
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+
 //Returns a Random Value Between Specified Values
 function rng(min, max) {
     max += 1 - min;
@@ -496,7 +508,7 @@ function trueFalse() {
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
-//Updates
+//Update Functions
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function update() {
@@ -1595,12 +1607,12 @@ function removeBlockedArea(id) {
 }
 
 //Checks if a Point is Within Blocked Area
-function checkAllBlocks(x, y, w, h, seeWindows, canFix) {
+function checkAllBlocks(x, y, w, h, seeWindows) {
     let result = false;
 
     if (blockedAreas.length > 0) {
         for (let i = 0; i < blockedAreas.length; i++) {
-            if (checkBlock(x, y, w, h, blockedAreas[i], canFix, seeWindows)) {
+            if (checkBlock(x, y, w, h, blockedAreas[i])) {
                 result = true;
             }
         }
@@ -1609,7 +1621,7 @@ function checkAllBlocks(x, y, w, h, seeWindows, canFix) {
     if (seeWindows && winds.length > 0) {
         for (let i = 0; i < winds.length; i++) {
             let tempBlock = windowToBlock(winds[i].win, false);
-            if (checkBlock(x, y, w, h, tempBlock, canFix, seeWindows)) {
+            if (checkBlock(x, y, w, h, tempBlock)) {
                 result = true;
             }
         }
@@ -1619,7 +1631,7 @@ function checkAllBlocks(x, y, w, h, seeWindows, canFix) {
 }
 
 //Checks if a Point is Within a Specific Blocked Areas
-function checkBlock(x, y, w, h, block, canFix, seeWindows) {
+function checkBlock(x, y, w, h, block) {
     let result = false;
     let checks = [];
     checks[0] = [block.x, block.x + block.w];
@@ -1633,86 +1645,11 @@ function checkBlock(x, y, w, h, block, canFix, seeWindows) {
         for (let i2 = 0; i2 < covered[i].length; i2++) {
             if (covered[i][i2] > checks[i][0] && x < checks[i][1]) {
                 result = true;
-                if (canFix) {
-                    result = fixBlock(x, y, w, h, block, seeWindows)[0];
-                    if (result == false) {
-                        let fixes = fixBlock[1];
-                        x = fixes[1][0];
-                        y = fixes[1][1];
-                    }
-                }
             }
         }
     }
 
     //if (result == true) console.log("Blocked By: " + block.id); //Test
-    return result;
-}
-
-//Determines the Sides Blocked for an Object
-function checkBlockSide(x, y, w, h, block) {
-    //Left, Right, Top, Bottom
-    let result = ["none", "none"]; 
-
-    let checks = [];
-    checks[0] = [block.x, block.x + block.w];
-    checks[1] = [block.y, block.y + block.h];
-
-    let covered = [];
-    covered[0] = [x, x + w];
-    covered[1] = [y, y + h];
-
-    let checked = -1;
-    for (let i = 0; i < covered.length; i++) {
-        checked += 1;
-        for (let i2 = 0; i2 < covered[i].length; i2++) {
-            if (covered[i][i2] > checks[i][0] && x < checks[i][1]) {
-                let options = [];
-                let requires = [];
-                options[0] = checks[i][0] - covered[i][0] - covered[i][1];
-                options[1] = checks[i][1] + 1;
-                requires = [Math.abs(covered[i][0] - options[0]), Math.abs(covered[i][0] - options[1])];
-                if (requires[0] < requires[1]) {
-                    result[checked] = [0, options[0]];
-                } else {
-                    result[checked] = [1, options[1]];
-                }
-
-            }
-        }
-    }
-
-    return result;
-}
-
-//Attempts to Relocate a Blocked Object
-function fixBlock(x, y, w, h, block, seeWindows) {
-    let result = [true, [x,y]];
-    let wrapBoard = true;
-    let checked = 2;
-
-    let status = checkBlockSide(x, y, w, h, block);
-    for (let i = 0; i < checked; i++) {
-        if (status[i] != "none") {
-            let change = status[i][1];
-            if (status[i][0] == 0) {
-                if (i == 0) {
-                    x -= change;
-                } else {
-                    y -= change;
-                }
-            } else {
-                if (i == 0) {
-                    x += change;
-                } else {
-                    y += change;
-                }
-            }
-        }
-    }
-
-    reult = [checkAllBlocks(x, y, w, h, seeWindows, false), [x, y]];
-
     return result;
 }
 
@@ -1745,17 +1682,17 @@ function animToBlock(drawn) {
 }
 
 //Checks if a Drawing is Blocked
-function checkDrawBlock(drawn, x, y, localPixes, seeWindows, canFix) {
+function checkDrawBlock(drawn, x, y, localPixes, seeWindows) {
     let w = drawn.width * localPixes;
     let h = drawn.height * localPixes;
-    return checkAllBlocks(x, y, w, h, seeWindows, canFix);
+    return checkAllBlocks(x, y, w, h, seeWindows);
 }
 
 //Checks if an Animation is Blocked
-function checkAnimationBlock(drawn, seeWindows, canFix) {
+function checkAnimationBlock(drawn, seeWindows) {
     let result = false;
     for (let i = 0; i < drawn.art.length; i++) {
-        if (checkDrawBlock(drawn.art[i], drawn.x, drawn.y, drawn.localPixes, seeWindows, canFix)) {
+        if (checkDrawBlock(drawn.art[i], drawn.x, drawn.y, drawn.localPixes, seeWindows)) {
             result = true;
         }
     }
