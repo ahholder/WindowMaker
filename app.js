@@ -75,8 +75,6 @@ function testBatch1() {
     makeSupportWin("testA", "title", "Test Instance");
     makeSupportWin("testA", "button", "Animate");
     makeSupportWin("testA", "button", "Move");
-    addBlockedArea(windowToBlock(winds[0].win, false));
-
 }
 
 //Test the Windows' Proof of Concept
