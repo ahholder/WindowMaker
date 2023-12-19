@@ -385,6 +385,7 @@ function testAns(result) {
 function testButtonClick(clickedButtonId, id) {
     if (clickedButtonId == 0) {
 
+        let testedBlock;
         let winPendingId = "testB";
         let parent = document.getElementById("testA");
         let newSize = [getRatio(100, true), getRatio(100, false)];
@@ -405,36 +406,77 @@ function testButtonClick(clickedButtonId, id) {
         queueEvent(300, makeAnimation, [aSlate2, 5, 0, 0, aContext, 15, "testB", 15]);
         queueEvent(601, clearWin, [anim.win.id, false]);
 
-        let backAnimationAttempts = 75;
+        let backAnimationAttempts = 50;
         let successfulAnimations = 0;
         let animationDuration = 1500;
         for (let i = 0; i < backAnimationAttempts; i++) {
             let boardPoints = [rng(boardWidth * 0.1, boardWidth * 0.9), rng(boardHeight * 0.1, boardHeight * 0.9)];
             let backAnimation = [testAns(0), testAns(3), testAns(0), testAns(1), testAns(0), testAns(2)];
-            let avoided = propMin(winds[0].win.style[cssAbb("marl")]) - (backAnimation[0].width * 10);
-            let avoided2 = propMin(winds[0].win.style[cssAbb("marl")]) + propMin(winds[0].win.style[cssAbb("w")]);
-            if (boardPoints[0] >= avoided && boardPoints[0] <= avoided2) {
-                if (trueFalse()) {
-                    boardPoints[0] = avoided2 + 1;
-                } else {
-                    boardPoints[0] = avoided2 + 1;
-                }
-            }
+            let orientationRng = trueFalse();
+
             backAnimation = makeAnimation(backAnimation, -1, boardPoints[0], boardPoints[1], context, 10, "testBack" + i, 10);
-            backAnimation = mirrorAnim(backAnimation, trueFalse());
+            backAnimation = mirrorAnim(backAnimation, orientationRng);
             if (checkAnimationBlock(backAnimation, true)) {
+                testedBlock = animToBlock(backAnimation);
+                let noticeColor = "#" + (99 - i) + (99 - i) + 99;
+
+                winPendingId = "Test-BlockShow" + i;
+                parent = overlay;
+                newSize = [testedBlock.w, testedBlock.h];
+                winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "bg", "txt", "marl", "mart", "op", "fs", "color"];
+                winValues = ["absolute", "3px solid " + noticeColor, 1, 1, newSize[0], newSize[1], "none", noticeColor, "center",
+                    testedBlock.x, testedBlock.y, 0.05, 24, "white"];
+                winStyling = cssMake(winValues, winTerms);
+                anim = logWin(parent, winPendingId, "div", winStyling, ["none", "none"], false, false, false, false);
+                anim.win.innerText = "Fail\n#" + i;
+
+                queueEvent(600, clearWin, [anim.id, false]);
                 removeAnimation(backAnimation);
             } else {
-                let testBlock = animToBlock(backAnimation);
-                addBlockedArea(testBlock);
+                testedBlock = animToBlock(backAnimation);
+                addBlockedArea(testedBlock);
                 queueEvent(animationDuration, removeAnimation, [backAnimation]);
                 queueEvent(animationDuration, removeBlockedArea, [blockedAreas[blockedAreas.length - 1]]);
                 successfulAnimations += 1;
+
+
+                winPendingId = "Test-BlockShow" + i;
+                parent = overlay;
+                newSize = [testedBlock.w, testedBlock.h];
+                winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "bg", "txt", "marl", "mart", "op", "fs", "color"];
+                winValues = ["absolute", "none", 1, 8, newSize[0], newSize[1], "none", "none", "center", testedBlock.x, testedBlock.y, 0.3, 24, "black"];
+                winStyling = cssMake(winValues, winTerms);
+                anim = logWin(parent, winPendingId, "div", winStyling, ["none", "none"], false, false, false, false);
+                if (orientationRng) {
+                    anim.win.innerText = "New #" + successfulAnimations + "\nTry #" + i;
+                } else {
+                    anim.win.innerText = "New\n#" + successfulAnimations + "\nTry\n#" + i;
+                }
+
+                queueEvent(600, clearWin, [anim, false]);
             }
         }
-        console.log("*Creating " + successfulAnimations + " / " + backAnimationAttempts + " possible background animations to avoid overlap");
-        console.log("*Background animations last " + (animationDuration / fps) + " seconds and can be stacked between animation tests");
 
+        console.log("*Creating " + successfulAnimations + " / " + backAnimationAttempts + " possible background animations to avoid overlap*");
+        console.log("*Background animations last " + (animationDuration / fps) + " seconds and can be stacked between animation tests*");
+
+        /*console.log(winds);
+        queueEvent(120, destroyButtons, [winds[0]]);
+        queueEvent(120, console.log, [winds]);*/
+
+        for (let i = 0; i < blockedAreas.length; i++) {
+
+            testedBlock = blockedAreas[i];
+            winPendingId = "Test-BlockShow" + i;
+            parent = overlay;
+            newSize = [testedBlock.w, testedBlock.h];
+            winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "bg", "txt", "marl", "mart", "op"];
+            winValues = ["absolute", "3px solid red", 1, 7, newSize[0], newSize[1], "none", "red", "center", testedBlock.x, testedBlock.y, 0.05];
+            winStyling = cssMake(winValues, winTerms);
+            anim = logWin(parent, winPendingId, "canvas", winStyling, ["none", "none"], false, false, false, false);
+
+            queueEvent(600, clearWin, [anim.id, false]);
+        }
 
     } else {
 
@@ -503,6 +545,15 @@ function trueFalse() {
     } else {
         return false;
     }
+}
+
+//Determines if Objects' Spaces Overlap
+function checkCollision(ax, ay, aw, ah, bx, by, bw, bh) {
+    let hits = false;
+    if (ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by) {
+        hits = true;
+    }
+    return hits;
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -696,9 +747,20 @@ function popupCycle() {
 
 //Deletes a Specified Document Element
 function clearWin(win, killHelper) {
-    let box = document.getElementById(win);
-    let log = checkWinLog(win, false);
+    let box;
+    let log;
+    let logNum;
     let support;
+
+    if (typeof win == "string") {
+        box = document.getElementById(win);
+        log = checkWinLog(win, false);
+        logNum = checkWinLog(win, true);
+    } else if (typeof win == "object") {
+        box = document.getElementById(win.id);
+        log = checkWinLog(document.getElementById(win.id), false);
+        logNum = checkWinLog(box, true);
+    }
 
     if (log.title != undefined && log.title != false) {
         support = document.getElementById(log.title);
@@ -708,12 +770,6 @@ function clearWin(win, killHelper) {
         support = document.getElementById(log.helper);
         support.parentNode.removeChild(support);
     }
-    /*if (log.buttons != false) {
-        for (let i = 0; i < log.buttons.length; i++) {
-            support = document.getElementById(log.buttons[i]);
-            support.parentNode.removeChild(support);
-        }
-    }*/
 
     if (box.nodeName.toLowerCase() == "canvas" || log.canvas != false) {
         let checked;
@@ -733,6 +789,8 @@ function clearWin(win, killHelper) {
     }
 
     box.parentNode.removeChild(box);
+    winds[logNum] = winds[winds.length - 1];
+    winds.pop();
 }
 
 //Modifies an Existing Window's CSS Style
@@ -793,6 +851,7 @@ function cssAbb(term) {
     if (term == "padl") return "padding-left";
     if (term == "padt") return "padding-top";
     if (term == "bg") return "background";
+    if (term == "op") return "opacity";
     return term;
 }
 
@@ -856,11 +915,21 @@ function logWin(parent, id, type, styling, colors, hoverable, clickable, centere
 //Determines Which Window's Log is Present
 function checkWinLog(id, numOnly) {
     for (let i = 0; i < winds.length; i++) {
-        if (winds[i].id == id) {
-            if (numOnly == false) {
-                return winds[i]; //Returns the entire object
-            } else {
-                return i; //Returns only the object's ID#
+        if (typeof id == "object") {
+            if (winds[i].win == id) {
+                if (numOnly == false) {
+                    return winds[i]; //Returns the entire object
+                } else {
+                    return i; //Returns only the object's ID#
+                }
+            }
+        } else {
+            if (winds[i].id == id) {
+                if (numOnly == false) {
+                    return winds[i]; //Returns the entire object
+                } else {
+                    return i; //Returns only the object's ID#
+                }
             }
         }
     }
@@ -954,12 +1023,9 @@ function makeSupportWin(id, type, text) {
         } else {
             winds[winNum].buttons[winds[winNum].buttons.length] = supportId;
 
-            //let spacing = propMin(getParentInfo(parent, "w")) / winds[winNum].buttons.length;
-            //let buffer = (spacing - newW) / 2;
             let spaces = getSpacing(propMin(getParentInfo(parent, "w")), false, newW, winds[winNum].buttons.length);
             for (let i = 0; i < winds[winNum].buttons.length; i++) {
                 let buttonWin = document.getElementById(winds[winNum].buttons[i]);
-                //styleWin(buttonWin, ((spacing * i) + buffer) + "px", cssAbb("marl"));
                 styleWin(buttonWin, spaces[i] + "px", cssAbb("marl"));
                 styleWin(buttonWin, lower + "px", cssAbb("mart"));
                 checkWinLog(buttonWin.id, false).info = buttonWin.innerText + "!"; //Placeholder Default Info
@@ -1136,23 +1202,36 @@ function getAnimRatio(anim, px) {
     return results;
 }
 
+//Destroys Buttons Associated with a Window Log
+function destroyButtons(log) {
+    if (log.buttons != false) {
+        if (log.buttons.length > 0) {
+            for (let i = 0; i < log.buttons.length; i++) {
+                let box = document.getElementById(log.buttons[i]);
+                clearWin(box.id, false);
+            }
+            log.buttons = false;
+        }
+    }
+}
+
 //Applied Results for Clicking -- Program Specific
 function clickResults(id, box, wind) {
-    console.log("successfully clicked " + id + "!");
+    console.log("--------------- Successfully clicked " + id + "! ---------------");
 
     //Test Function -- Animation
     if (id == "testA-button0" && document.getElementById("testB") == undefined) {
         testButtonClick(0, id);
 
     } else if (id == "testA-button0" && document.getElementById("testB") != undefined) {
-        console.log("Animation Test Already Underway!");
+        console.log("**Animation Test Already Underway!**");
     }
 
     //Test Function -- Movement
     if (id == "testA-button1" && checkMover("testA") == false && document.getElementById("testC") == undefined) {
         testButtonClick(1, id);
     } else if (id == "testA-button1" && (checkMover("testA") == true || document.getElementById("testC") != undefined)) {
-        console.log("Movement Test Already Underway!");
+        console.log("**Movement Test Already Underway!**");
     }
 }
 
@@ -1502,6 +1581,72 @@ function removeAnimation(animation) {
     }
 }
 
+//Returns the True Width and Height Recognizing Blank Space for a Drawing
+function trueDrawDimensions(drawn) {
+    let checklist = drawn.original;
+    let trueWidth = drawn.width;
+    let trueHeight = drawn.height;
+    let h = drawn.height - 1;
+    let w = drawn.width - 1;
+
+    let checking = true;
+    //Height Test
+    for (let i = 0; i < drawn.height; i++) {
+        let checked = h - i;
+        let valid = true;
+        for (let i2 = 0; i2 < drawn.width; i2++) {
+            if (checking) {
+                if (checklist[checked][i2] != "none") {
+                    valid = false;
+                    checking = false;
+                }
+            }
+        }
+        if (valid && checking) trueHeight -= 1;
+    }
+
+    //Width Test
+    checking = true;
+    for (let i2 = 0; i2 < drawn.width; i2++) {
+        let checked = w - i2;
+        let valid = true;
+        for (let i = 0; i < trueHeight; i++) {
+            if (checking) {
+                if (checklist[i][checked] != "none") {
+                    valid = false;
+                    checking = false;
+                }
+            }
+        }
+        if (valid && checking) trueWidth -= 1;
+    }
+
+    //Final
+    return [trueWidth, trueHeight];
+}
+
+//Returns the True Width and Height Recognizing Blank Space for an Animation
+function trueAnimDimensions(drawn) {
+    let trueWidth = trueDrawDimensions(drawn.art[0])[0];
+    let trueHeight = trueDrawDimensions(drawn.art[0])[1];
+
+    if (drawn.art.length > 1) {
+        for (let i = 1; i < drawn.art.length; i++) {
+            let sizes = trueDrawDimensions(drawn.art[i]);
+
+            if (sizes[0] > trueWidth) {
+                trueWidth = sizes[0];
+            }
+
+            if (sizes[1] > trueHeight) {
+                trueHeight = sizes[1];
+            }
+        }
+    }
+
+    return [trueWidth, trueHeight];
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 //Queued Event Functions
 //------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1618,7 +1763,7 @@ function checkAllBlocks(x, y, w, h, seeWindows) {
 
     if (seeWindows && winds.length > 0) {
         for (let i = 0; i < winds.length; i++) {
-            let tempBlock = windowToBlock(winds[i].win, false);
+            let tempBlock = windowToBlock(winds[i], false);
             if (checkBlock(x, y, w, h, tempBlock)) {
                 result = true;
             }
@@ -1630,42 +1775,30 @@ function checkAllBlocks(x, y, w, h, seeWindows) {
 
 //Checks if a Point is Within a Specific Blocked Areas
 function checkBlock(x, y, w, h, block) {
-    let result = false;
-    let checks = [];
-    checks[0] = [block.x, block.x + block.w];
-    checks[1] = [block.y, block.y + block.h];
-
-    let covered = [];
-    covered[0] = [x, x + w];
-    covered[1] = [y, y + h];
-
-    for (let i = 0; i < covered.length; i++) {
-        for (let i2 = 0; i2 < covered[i].length; i2++) {
-            if (covered[i][i2] > checks[i][0] && x < checks[i][1]) {
-                result = true;
-            }
-        }
-    }
-
-    //if (result == true) console.log("Blocked By: " + block.id); //Test
+    let result = checkCollision(x, y, w, h, block.x, block.y, block.w, block.h);
     return result;
 }
 
 //Converts a Window into a Blocked Area
-function windowToBlock(win, useAlt) {
+function windowToBlock(log, useAlt) {
+    let win = log.win;
     let id = win.id;
-    let x = win.style[cssAbb("marl")];
-    let y = win.style[cssAbb("mart")];
-    let w = win.style[cssAbb("w")];
-    let h = win.style[cssAbb("h")];
+    let x = propMin(win.style[cssAbb("marl")]);
+    let y = propMin(win.style[cssAbb("mart")]);
+    let w = propMin(win.style[cssAbb("w")]);
+    let h = propMin(win.style[cssAbb("h")]);
+
+    if (log.title != false) {
+        h += propMin(document.getElementById(log.title).style[cssAbb("h")]);
+    }
 
     if (x == undefined || y == undefined) {
         useAlt = true;
     }
 
     if (useAlt) {
-        x = win.style[cssAbb("l")];
-        y = win.style[cssAbb("t")];
+        x = propMin(win.style[cssAbb("l")]);
+        y = propMin(win.style[cssAbb("t")]);
     }
 
     return makeBlockedArea(id, x, y, w, h);
@@ -1673,16 +1806,18 @@ function windowToBlock(win, useAlt) {
 
 //Converts an Animation to a Blocked Area
 function animToBlock(drawn) {
-    let w = drawn.art[0].width * drawn.localPixes;
-    let h = drawn.art[0].height * drawn.localPixes;
+    let dimensions = trueAnimDimensions(drawn);
+    let w = dimensions[0] * drawn.localPixes;
+    let h = dimensions[1] * drawn.localPixes;
     let id = drawn.id;
     return makeBlockedArea(id, drawn.x, drawn.y, w, h);
 }
 
 //Checks if a Drawing is Blocked
 function checkDrawBlock(drawn, x, y, localPixes, seeWindows) {
-    let w = drawn.width * localPixes;
-    let h = drawn.height * localPixes;
+    let dimensions = trueDrawDimensions(drawn);
+    let w = dimensions[0] * localPixes;
+    let h = dimensions[1] * localPixes;
     return checkAllBlocks(x, y, w, h, seeWindows);
 }
 
