@@ -72,7 +72,7 @@ function testBatch1() {
     winText = "\nThis window is centered on its parent object and canvased.\n\nThis window is not clickable or hoverable.";
     logWin(overlay, winPendingId, "div", winStyling, ["#959595", "#909090"], false, false, true, true);
     document.getElementById("testA").innerText = winText;
-    makeSupportWin("testA", "title", "Test Instance");
+    makeSupportWin("testA", "title", "Showcase Test Instance");
     makeSupportWin("testA", "button", "Animate");
     makeSupportWin("testA", "button", "Move");
 }
