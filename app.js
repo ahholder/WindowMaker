@@ -17,6 +17,7 @@ let moverList = [];
 
 let eventQueue = [];
 let repeatQueue = [];
+let blockedAreas = [];
 
 let gameActive = true;
 
@@ -63,7 +64,6 @@ function testBatch1() {
     let winStyling;
     let winText;
 
-    //Test Win #1
     winPendingId = "testA";
     winTerms = ["pos", "br", "brr", "z", "w", "h", "user", "fs", "bg", "txt", "marl", "mart"];
     winValues = ["absolute", "5px solid rgba(0,150,255,0.7)", 3, 5, 350, 250, "none", 18, "slategray", "center", 0, 0];
@@ -74,6 +74,7 @@ function testBatch1() {
     makeSupportWin("testA", "title", "Test Instance");
     makeSupportWin("testA", "button", "Animate");
     makeSupportWin("testA", "button", "Move");
+    addBlockedArea(windowToBlock(winds[0].win, false));
 
 }
 
@@ -280,7 +281,7 @@ function testBatch2() {
 //List of Test Animations
 function testAns(result) {
     let set = [];
-    let c = ["none", "navajowhite","purple","brown","darkgoldenrod", "black", "white"]
+    let c = ["none", "navajowhite","purple","brown","darkgoldenrod", "black", "white", "mediumpurple"]
     let m = 0;
 
     //set[m][set[m].length] = ["none", "none", "none", "none", "none", "none", "none", "none"];
@@ -288,36 +289,36 @@ function testAns(result) {
     set[m] = [];
     set[m][set[m].length] = [c[0], c[0], c[4], c[4], c[0], c[0]];
     set[m][set[m].length] = [c[0], c[0], c[1], c[1], c[0], c[0]];
-    set[m][set[m].length] = [c[0], c[2], c[2], c[2], c[2], c[0]];
-    set[m][set[m].length] = [c[0], c[1], c[2], c[2], c[1], c[0]];
-    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[2], c[2], c[7], c[7], c[0]];
+    set[m][set[m].length] = [c[0], c[1], c[2], c[7], c[1], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[7], c[0], c[0]];
     set[m][set[m].length] = [c[0], c[0], c[3], c[3], c[0], c[0]];
 
     m += 1;
     set[m] = [];
     set[m][set[m].length] = [c[0], c[0], c[4], c[4], c[0], c[0]];
     set[m][set[m].length] = [c[0], c[0], c[1], c[1], c[0], c[0]];
-    set[m][set[m].length] = [c[1], c[2], c[2], c[2], c[2], c[1]];
-    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
-    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[1], c[2], c[2], c[7], c[7], c[1]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[7], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[7], c[0], c[0]];
     set[m][set[m].length] = [c[0], c[0], c[3], c[3], c[0], c[0]];
 
     m += 1;
     set[m] = [];
     set[m][set[m].length] = [c[0], c[0], c[4], c[4], c[0], c[0]];
     set[m][set[m].length] = [c[0], c[0], c[1], c[1], c[0], c[0]];
-    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[2], c[0]];
-    set[m][set[m].length] = [c[0], c[0], c[1], c[2], c[1], c[0]];
-    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[7], c[7], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[1], c[7], c[1], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[7], c[0], c[0]];
     set[m][set[m].length] = [c[0], c[0], c[3], c[3], c[0], c[0]];
 
     m += 1;
     set[m] = [];
     set[m][set[m].length] = [c[0], c[0], c[4], c[4], c[0], c[0]];
     set[m][set[m].length] = [c[0], c[0], c[1], c[1], c[0], c[0]];
-    set[m][set[m].length] = [c[0], c[2], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[2], c[2], c[7], c[0], c[0]];
     set[m][set[m].length] = [c[0], c[1], c[2], c[1], c[0], c[0]];
-    set[m][set[m].length] = [c[0], c[0], c[2], c[2], c[0], c[0]];
+    set[m][set[m].length] = [c[0], c[0], c[2], c[7], c[0], c[0]];
     set[m][set[m].length] = [c[0], c[0], c[3], c[3], c[0], c[0]];
 
     m += 1;
@@ -399,10 +400,35 @@ function testButtonClick(clickedButtonId, id) {
         let aSlate = [testAns(0), testAns(2), testAns(0), testAns(3)];
         let aSlate2 = [testAns(0), testAns(1), testAns(0), testAns(1)];
         let testAnim = makeAnimation(aSlate, 5, 0, 0, aContext, 15, "testB", 15);
+        testAnim = rotateAnim(rotateAnim(rotateAnim(rotateAnim(testAnim))));
         centerAnim(anim.win, testAnim, parent, true, false, true);
 
         queueEvent(300, makeAnimation, [aSlate2, 5, 0, 0, aContext, 15, "testB", 15]);
         queueEvent(601, clearWin, [anim.win.id, false]);
+
+        for (let i = 0; i < 4; i++) {
+            console.log("Back Animation # " + i + ":");
+            let boardPoints = [rng(boardWidth * 0.1, boardWidth * 0.9), rng(boardHeight * 0.1, boardHeight * 0.9)];
+            let backAnimation = [testAns(0), testAns(3), testAns(0), testAns(1), testAns(0), testAns(2)];
+            /*let avoided = propMin(winds[0].win.style[cssAbb("marl")]) - (backAnimation[0].width * 10);
+            let avoided2 = propMin(winds[0].win.style[cssAbb("marl")]) + propMin(winds[0].win.style[cssAbb("w")]);
+            if (boardPoints[0] >= avoided && boardPoints[0] <= avoided2) {
+                if (trueFalse()) {
+                    boardPoints[0] = avoided2 + 1;
+                } else {
+                    boardPoints[0] = avoided2 + 1;
+                }
+            }*/
+            backAnimation = makeAnimation(backAnimation, -1, boardPoints[0], boardPoints[1], context, 10, "testBack" + i, 10);
+            backAnimation = mirrorAnim(backAnimation, trueFalse());
+            let testBlock = animToBlock(backAnimation);
+            //console.log(i + " Being Tested: " + checkAnimationBlock(backAnimation, true, false));
+            checkAnimationBlock(backAnimation, true, true);
+            //console.log("Back Animation #" + i + " Found Blocked");
+            addBlockedArea(testBlock);
+            queueEvent(1500, removeAnimation, [backAnimation]);
+            queueEvent(1500, removeBlockedArea, [blockedAreas[blockedAreas.length - 1]]);
+        }
 
     } else {
 
@@ -428,7 +454,7 @@ function testButtonClick(clickedButtonId, id) {
         addAnimationZone(aContext);
 
         let aSlate = [testAns(5), testAns(6), testAns(5), testAns(6)];
-        let testAnim = makeAnimation(aSlate, -1, 0, 0, aContext, 10, "testC", 20);
+        let testAnim = flipAnim(makeAnimation(aSlate, -1, 0, 0, aContext, 10, "testC", 20));
         centerAnim(anim.win, testAnim, parent, true, true, true);
         makeMover(anim.win, 30, 0, 50, 1, true);
         queueRepeat("testTroll", 60, makeMover, [anim.win, 30, 0, -100, 1, true]);
@@ -438,6 +464,34 @@ function testButtonClick(clickedButtonId, id) {
         queueEvent(362, removeRepeatQueue, ["testTroll2"]);
         queueEvent(363, clearWin, [anim.win.id, false]);
 
+    }
+}
+
+//Returns a Random Value Between Specified Values
+function rng(min, max) {
+    max += 1 - min;
+    let result = Math.floor(Math.random() * max);
+    result += min;
+    return result;
+}
+
+//Randomly Returns a Positive or Negative for the Value
+function plusMinus(value) {
+    let change = rng(0, 1);
+    if (change == 0) {
+        return value;
+    } else {
+        return value * -1;
+    }
+}
+
+//Randomly Returns True or False
+function trueFalse() {
+    let result = plusMinus(1);
+    if (result > 0) {
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -1256,6 +1310,143 @@ function moveMover(moved) {
     }
 }
 
+//Returns an Altered Sprite Based on Input
+function alterArt(drawn, type, full) {
+    let template = drawn.original;
+    let height = drawn.height;
+    let width = drawn.width;
+    let scope = template.length - 1;
+    let result = [];
+    let w = width - 1;
+    let h = height - 1;
+
+    for (let i = 0; i < height; i++) {
+        result[i] = [];
+        for (let i2 = 0; i2 < width; i2++) {
+            let x = i;
+            let y = i2;
+
+            if (type == "rotate") {
+                x = scope - i2;
+                y = i;
+            } else if (type == "flip") {
+                let base = (i + 1) * w;
+                let counter = (i * w) + i2;
+
+                y = base - counter;
+                x = i;
+            }
+            
+            result[i][i2] = template[x][y];
+        }
+    }
+
+    if (full) {
+        result = makeDrawing(result);
+    }
+
+    return result;
+}
+
+//Returns Sprite Art Rotated by 90 Degrees
+function rotateArt(drawn) {
+    return alterArt(drawn, "rotate", true);
+}
+
+//Returns Sprite Art Flipped Across Y-Axis
+function flipArt(drawn) {
+    return alterArt(drawn, "flip", true);
+}
+
+//Returns an Art Sprite with Additional Columns and Rows Mirrored Across the X-Axis or Y-Axis
+function mirrorArt(drawn, useX) {
+    let template = drawn.original;
+    let height = drawn.height;
+    let width = drawn.width;
+    let result = [];
+    let w = width - 1;
+    let h = height - 1;
+
+    if (useX) {
+        for (let i = 0; i < height; i++) {
+            result[i] = [];
+            let scope = template[i].length - 1;
+            for (let i2 = 0; i2 < width; i2++) {
+                result[i][i2] = template[i][i2];
+            }
+            for (let i2 = 0; i2 < width; i2++) {
+                let bonus = width + i2;
+                if (template.length % 2 != 0 && i2 != (parseInt(template.length / 2) + (template.length % 2))) {
+                } else {
+                    result[i][bonus] = template[i][scope - i2];
+                }
+            }
+        }
+        let totalParts = result[0].length;
+        let addedParts = totalParts - width;
+        for (let i = 0; i < addedParts; i++) {
+            let truePart = height + i;
+            result[truePart] = [];
+            for (let i2 = 0; i2 < totalParts; i2++) {
+                result[truePart][i2] = "none";
+            }
+        }
+    } else {
+        for (let i = 0; i < (height * 2); i++) {
+            result[i] = [];
+        }
+        for (let i2 = 0; i2 < width; i2++) {
+            for (let i = 0; i < height; i++) {
+                result[i][i2] = template[i][i2];
+            }
+            for (let i = 0; i < height; i++) {
+                let scope = template[i].length - 1;
+                let bonus = height + i;
+                if (template[0].length % 2 != 0 && i2 != (parseInt(template[0].length / 2) + (template[0].length % 2))) {
+                } else {
+                    result[bonus][i2] = template[scope - i][i2];
+                }
+            }
+        }
+        let totalParts = result.length;
+        let addedParts = totalParts - width;
+        for (let i2 = 0; i2 < addedParts; i2++) {
+            let truePart = width + i2;
+            for (let i = 0; i < totalParts; i++) {
+                result[i][truePart] = "none";
+            }
+        }
+    }
+
+    result = makeDrawing(result);
+
+    return result;
+}
+
+//Returns Animation Drawing Array Rotated by 90 Degrees
+function rotateAnim(drawn) {
+    for (let i = 0; i < drawn.art.length; i++) {
+        drawn.art[i] = rotateArt(drawn.art[i]);
+    }
+    return drawn;
+}
+
+//Returns Animation Drawing Array Flipped Across Y-Axis
+function flipAnim(drawn) {
+    for (let i = 0; i < drawn.art.length; i++) {
+        drawn.art[i] = flipArt(drawn.art[i]);
+    }
+    return drawn;
+}
+
+//Returns Animation Drawing Array Rotated Mirrored Across the X-Axis or Y-Axis
+function mirrorAnim(drawn, useX) {
+    for (let i = 0; i < drawn.art.length; i++) {
+        drawn.art[i] = mirrorArt(drawn.art[i], useX);
+    }
+    return drawn;
+}
+
 //Adds an Animated Area to the Global List of Cleared Contexts
 function addAnimationZone(region) {
     animatedZones[animatedZones.length] = region;
@@ -1371,6 +1562,206 @@ function removeRepeatQueue(repeat) {
         //if (repeatQueue.length < 1) repeatQueue = [];
     }
 }
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+//Blocked Area Functions
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//Makes a Blocked Area
+function makeBlockedArea(id, x, y, w, h) {
+    return { "id": id, "x": x, "y": y, "w": w, "h": h };
+}
+
+//Adds a Blocked Area to the List
+function addBlockedArea(newBlock) {
+    blockedAreas[blockedAreas.length] = newBlock;
+}
+
+//Removes a Blocked Area from the List
+function removeBlockedArea(id) {
+    let result = "none";
+    for (let i = 0; i < blockedAreas.length; i++) {
+        if (typeof id == "string") {
+            if (blockedAreas[i].id == id) result = i;
+        } else {
+            if (id == blockedAreas[i]) result = i;
+        }
+    }
+
+    if (result != "none") {
+        blockedAreas[result] = blockedAreas[blockedAreas.length - 1];
+        blockedAreas.pop();
+    }
+}
+
+//Checks if a Point is Within Blocked Area
+function checkAllBlocks(x, y, w, h, seeWindows, canFix) {
+    let result = false;
+
+    if (blockedAreas.length > 0) {
+        for (let i = 0; i < blockedAreas.length; i++) {
+            if (checkBlock(x, y, w, h, blockedAreas[i], canFix, seeWindows)) {
+                result = true;
+            }
+        }
+    }
+
+    if (seeWindows && winds.length > 0) {
+        for (let i = 0; i < winds.length; i++) {
+            let tempBlock = windowToBlock(winds[i].win, false);
+            if (checkBlock(x, y, w, h, tempBlock, canFix, seeWindows)) {
+                result = true;
+            }
+        }
+    }
+
+    return result;
+}
+
+//Checks if a Point is Within a Specific Blocked Areas
+function checkBlock(x, y, w, h, block, canFix, seeWindows) {
+    let result = false;
+    let checks = [];
+    checks[0] = [block.x, block.x + block.w];
+    checks[1] = [block.y, block.y + block.h];
+
+    let covered = [];
+    covered[0] = [x, x + w];
+    covered[1] = [y, y + h];
+
+    for (let i = 0; i < covered.length; i++) {
+        for (let i2 = 0; i2 < covered[i].length; i2++) {
+            if (covered[i][i2] > checks[i][0] && x < checks[i][1]) {
+                result = true;
+                if (canFix) {
+                    result = fixBlock(x, y, w, h, block, seeWindows)[0];
+                    if (result == false) {
+                        let fixes = fixBlock[1];
+                        x = fixes[1][0];
+                        y = fixes[1][1];
+                    }
+                }
+            }
+        }
+    }
+
+    //if (result == true) console.log("Blocked By: " + block.id); //Test
+    return result;
+}
+
+//Determines the Sides Blocked for an Object
+function checkBlockSide(x, y, w, h, block) {
+    //Left, Right, Top, Bottom
+    let result = ["none", "none"]; 
+
+    let checks = [];
+    checks[0] = [block.x, block.x + block.w];
+    checks[1] = [block.y, block.y + block.h];
+
+    let covered = [];
+    covered[0] = [x, x + w];
+    covered[1] = [y, y + h];
+
+    let checked = -1;
+    for (let i = 0; i < covered.length; i++) {
+        checked += 1;
+        for (let i2 = 0; i2 < covered[i].length; i2++) {
+            if (covered[i][i2] > checks[i][0] && x < checks[i][1]) {
+                let options = [];
+                let requires = [];
+                options[0] = checks[i][0] - covered[i][0] - covered[i][1];
+                options[1] = checks[i][1] + 1;
+                requires = [Math.abs(covered[i][0] - options[0]), Math.abs(covered[i][0] - options[1])];
+                if (requires[0] < requires[1]) {
+                    result[checked] = [0, options[0]];
+                } else {
+                    result[checked] = [1, options[1]];
+                }
+
+            }
+        }
+    }
+
+    return result;
+}
+
+//Attempts to Relocate a Blocked Object
+function fixBlock(x, y, w, h, block, seeWindows) {
+    let result = [true, [x,y]];
+    let wrapBoard = true;
+    let checked = 2;
+
+    let status = checkBlockSide(x, y, w, h, block);
+    for (let i = 0; i < checked; i++) {
+        if (status[i] != "none") {
+            let change = status[i][1];
+            if (status[i][0] == 0) {
+                if (i == 0) {
+                    x -= change;
+                } else {
+                    y -= change;
+                }
+            } else {
+                if (i == 0) {
+                    x += change;
+                } else {
+                    y += change;
+                }
+            }
+        }
+    }
+
+    reult = [checkAllBlocks(x, y, w, h, seeWindows, false), [x, y]];
+
+    return result;
+}
+
+//Converts a Window into a Blocked Area
+function windowToBlock(win, useAlt) {
+    let id = win.id;
+    let x = win.style[cssAbb("marl")];
+    let y = win.style[cssAbb("mart")];
+    let w = win.style[cssAbb("w")];
+    let h = win.style[cssAbb("h")];
+
+    if (x == undefined || y == undefined) {
+        useAlt = true;
+    }
+
+    if (useAlt) {
+        x = win.style[cssAbb("l")];
+        y = win.style[cssAbb("t")];
+    }
+
+    return makeBlockedArea(id, x, y, w, h);
+}
+
+//Converts an Animation to a Blocked Area
+function animToBlock(drawn) {
+    let w = drawn.art[0].width * drawn.localPixes;
+    let h = drawn.art[0].height * drawn.localPixes;
+    let id = drawn.id;
+    return makeBlockedArea(id, drawn.x, drawn.y, w, h);
+}
+
+//Checks if a Drawing is Blocked
+function checkDrawBlock(drawn, x, y, localPixes, seeWindows, canFix) {
+    let w = drawn.width * localPixes;
+    let h = drawn.height * localPixes;
+    return checkAllBlocks(x, y, w, h, seeWindows, canFix);
+}
+
+//Checks if an Animation is Blocked
+function checkAnimationBlock(drawn, seeWindows, canFix) {
+    let result = false;
+    for (let i = 0; i < drawn.art.length; i++) {
+        if (checkDrawBlock(drawn.art[i], drawn.x, drawn.y, drawn.localPixes, seeWindows, canFix)) {
+            result = true;
+        }
+    }
+    return result;
+}
+
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 //Miscellaneous Functions
