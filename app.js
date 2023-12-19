@@ -41,7 +41,6 @@ window.onload = function () {
     addAnimationZone(context);
 
     newGame();
-    testBatch1();
 }
 
 //(De)activate User Input
